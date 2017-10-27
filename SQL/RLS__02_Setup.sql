@@ -49,6 +49,33 @@ GRANT SELECT ON dbo.SalesPerson TO sjones, bsmith
 GRANT SELECT ON dbo.OrderHeader TO sjones, bsmith
 GO
 
+CREATE TABLE dbo.Customer
+  (
+    CustomerID INT IDENTITY(1, 1)
+                PRIMARY KEY
+  , CustomerAdded DATETIME2(3)
+  , CustomerName VARCHAR(200)
+  , Creditlimit NUMERIC(12, 4)
+  , StatusKey TINYINT
+  , SalesPersonID INT
+  , CONSTRAINT Customer_SalesPerson_SalesPersonID FOREIGN KEY (SalesPersonID) REFERENCES dbo.SalesPerson (SalesPersonID)
+  );
+GO
+SET IDENTITY_INSERT dbo.Customer ON;
+INSERT dbo.Customer
+    ( CustomerID, CustomerAdded, CustomerName, Creditlimit, StatusKey, SalesPersonID )
+  VALUES
+    ( 1, '2015/10/12', 'Deuce', 500.00, 1, 1 )
+,   ( 2, '2015/11/23', 'Azure', 250.00, 1, 1 )
+,   ( 3, '2015/11/23', 'Uma', 120.00, 1, 2 )
+,   ( 4, '2015/12/03', 'Oscar', 125.00, 1, 2 )
+,   ( 5, '2015/12/15', 'Stitch', 800.00, 1, 3 )
+,   ( 6, '2015/12/22', 'Hazel', 50.00, 1, 3 );
+SET IDENTITY_INSERT dbo.Customer OFF;
+GO
+GRANT SELECT ON dbo.Customer TO sjones, bsmith
+GO
+
 CREATE FUNCTION dbo.RLS_SalesPerson_OrderCheck ( @salespersonid INT )
 RETURNS TABLE
     WITH SCHEMABINDING
